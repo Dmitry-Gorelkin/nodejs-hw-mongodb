@@ -22,7 +22,7 @@ export const setupServer = () => {
     });
   });
 
-  app.get('/contact', async (req, res) => {
+  app.get('/contacts', async (req, res) => {
     try {
       const contacts = await Contact.find();
 
@@ -39,7 +39,7 @@ export const setupServer = () => {
     }
   });
 
-  app.get('/contact/:contactId', async (req, res) => {
+  app.get('/contacts/:contactId', async (req, res) => {
     const { contactId } = req.params;
 
     try {
