@@ -1,12 +1,12 @@
-import 'dotenv/config';
 import mongoose from 'mongoose';
+import env from '../utils/env.js';
 
-export const initMongoConnection = async () => {
+const initMongoConnection = async () => {
   try {
-    const MONGODB_USER = process.env.MONGODB_USER;
-    const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
-    const MONGODB_URL = process.env.MONGODB_URL;
-    const MONGODB_DB = process.env.MONGODB_DB;
+    const MONGODB_USER = env('MONGODB_USER');
+    const MONGODB_PASSWORD = env('MONGODB_PASSWORD');
+    const MONGODB_URL = env('MONGODB_URL');
+    const MONGODB_DB = env('MONGODB_DB');
 
     console.log('Please wait, connecting to the database.');
 
@@ -20,3 +20,5 @@ export const initMongoConnection = async () => {
     throw e;
   }
 };
+
+export default initMongoConnection;
