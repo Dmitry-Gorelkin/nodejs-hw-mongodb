@@ -4,6 +4,7 @@ import {
   deleteContact,
   getAllContacts,
   getContsctById,
+  validateContact,
   updateContact,
 } from '../services/contacts.js';
 
@@ -64,20 +65,7 @@ export const putContactController = async (req, res, next) => {
     runValidators: true,
   };
 
-  const contact = {
-    name: req.body.name ? req.body.name : next(createHttpError(404, 'Contact not name')),
-    phoneNumber: req.body.phoneNumber
-      ? req.body.phoneNumber
-      : next(createHttpError(404, 'Contact not phoneNumber')),
-    email: req.body.email ? req.body.email : next(createHttpError(404, 'Contact not email')),
-    contactType: req.body.contactType
-      ? req.body.contactType
-      : next(createHttpError(404, 'Contact not contactType')),
-    isFavourite:
-      req.body.isFavourite === undefined
-        ? next(createHttpError(404, 'Contact not isFavourite'))
-        : req.body.isFavourite,
-  };
+  const contact = await validateContact(req.body);
 
   const putContact = await updateContact(contactId, contact, options);
 
@@ -87,8 +75,9 @@ export const putContactController = async (req, res, next) => {
       message: 'Successfully update a contact!',
       data: putContact,
     });
-  }
 
+    return;
+  }
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',

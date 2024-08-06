@@ -9,4 +9,6 @@ export const createContact = payload => Contact.create(payload);
 export const updateContact = (id, update, options = { new: true }) =>
   Contact.findByIdAndUpdate(id, update, options);
 
+export const validateContact = payload => Contact.validate(payload);
+
 export const deleteContact = id => Contact.findByIdAndDelete(id);
