@@ -19,15 +19,15 @@ export const getAllContactsController = async (req, res) => {
 };
 
 export const getContactByIdController = async (req, res, next) => {
-  const { contactId } = req.params;
+  const { id } = req.params;
 
-  const contact = await getContsctById(contactId);
+  const contact = await getContsctById(id);
 
   if (!contact) throw createHttpError(404, 'Contact not found');
 
   res.json({
     status: 200,
-    message: `Successfully found contact with id: ${contactId}!`,
+    message: `Successfully found contact with id: ${id}!`,
     data: contact,
   });
 };
@@ -42,10 +42,10 @@ export const createContactController = async (req, res) => {
   });
 };
 
-export const patchContactController = async (req, res) => {
-  const { contactId } = req.params;
+export const updateContactController = async (req, res) => {
+  const { id } = req.params;
 
-  const patchContact = await updateContact(contactId, req.body);
+  const patchContact = await updateContact(id, req.body);
 
   if (!patchContact) throw createHttpError(404, 'Contact not found');
 
@@ -57,7 +57,7 @@ export const patchContactController = async (req, res) => {
 };
 
 export const putContactController = async (req, res, next) => {
-  const { contactId } = req.params;
+  const { id } = req.params;
   const options = {
     new: true,
     upsert: true,
@@ -67,7 +67,7 @@ export const putContactController = async (req, res, next) => {
 
   const contact = await validateContact(req.body);
 
-  const putContact = await updateContact(contactId, contact, options);
+  const putContact = await updateContact(id, contact, options);
 
   if (putContact.lastErrorObject.updatedExisting) {
     res.status(200).json({
@@ -86,9 +86,9 @@ export const putContactController = async (req, res, next) => {
 };
 
 export const deleteContactController = async (req, res) => {
-  const { contactId } = req.params;
+  const { id } = req.params;
 
-  const result = await deleteContact(contactId);
+  const result = await deleteContact(id);
 
   if (!result) throw createHttpError(404, 'Contact not found');
 
