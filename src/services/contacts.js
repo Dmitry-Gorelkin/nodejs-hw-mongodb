@@ -24,15 +24,13 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter 
       .exec(),
   ]);
 
-  const totalPages = Math.ceil(count / perPage);
-
   if (count === 0) {
     return {
       data: contacts,
       page,
       perPage,
       totalItems: count,
-      totalPages,
+      totalPages: 0,
       hasPreviousPage: false,
       hasNextPage: false,
       sortBy,
@@ -40,6 +38,7 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter 
       ...filter,
     };
   }
+  const totalPages = Math.ceil(count / perPage);
 
   if (page > totalPages)
     throw createHttpError(400, 'The requested page exceeds the total number of pages');

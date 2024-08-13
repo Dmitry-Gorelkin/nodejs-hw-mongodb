@@ -1,10 +1,10 @@
 import { SORT_ORDER } from '../constants/contacts.js';
-import { KEY_OF_CONTACT } from '../constants/contacts.js';
+import { KEY_OF_CONTACT, KEY_OF_CONTACT_DEFAULT } from '../constants/contacts.js';
 
 const parseSortBy = sortBy => {
-  if (typeof sortBy !== 'string') return KEY_OF_CONTACT[0];
+  if (typeof sortBy !== 'string') return KEY_OF_CONTACT_DEFAULT;
 
-  return KEY_OF_CONTACT.includes(sortBy) ? sortBy : KEY_OF_CONTACT[0];
+  return KEY_OF_CONTACT.includes(sortBy) ? sortBy : KEY_OF_CONTACT_DEFAULT;
 };
 
 const parseSortOrder = sortOrder => {
