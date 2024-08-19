@@ -1,14 +1,12 @@
 import createHttpError from 'http-errors';
 
-const validateBody = shema => {
-  return (req, res, next) => {
-    const validationResult = shema.validate(req.body, { abortEarly: false });
-
-    if (typeof validationResult.error !== 'undefined')
-      throw createHttpError(400, validationResult.error.details.map(err => err.message).join(', '));
-
+const validateBody = shema => async (req, res, next) => {
+  try {
+    await shema.validateAsync(req.body, { abortEarly: false });
     next();
-  };
+  } catch (error) {
+    next(createHttpError(400, error.details.map(err => err.message).join(', ')));
+  }
 };
 
 export default validateBody;

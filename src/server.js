@@ -2,8 +2,9 @@ import express from 'express';
 import { pinoHttp } from 'pino-http';
 import cors from 'cors';
 import env from './utils/env.js';
-import notFoundHandler from './middlewares/notFoundHandler.js';
+import routerAuth from './routers/auth.js';
 import routerContacts from './routers/contacts.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 const PORT = env('PORT', 3000);
@@ -17,6 +18,8 @@ const logger = pinoHttp({
 const setupServer = () => {
   app.use(cors());
   app.use(logger);
+
+  app.use('/auth', routerAuth);
 
   app.use('/contacts', routerContacts);
 

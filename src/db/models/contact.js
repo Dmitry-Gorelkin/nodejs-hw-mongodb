@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { KEY_CONTACT_TYPE, KEY_CONTACT_TYPE_DEFAULT } from '../../constants/contacts.js';
 
 const contactsSchema = new Schema(
@@ -25,6 +25,9 @@ const contactsSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+    },
   },
   {
     timestamps: true,
@@ -32,4 +35,4 @@ const contactsSchema = new Schema(
   }
 );
 
-export const Contact = mongoose.model('Contact', contactsSchema);
+export const Contact = model('Contact', contactsSchema);
