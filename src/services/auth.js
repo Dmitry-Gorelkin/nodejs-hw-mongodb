@@ -5,6 +5,8 @@ import { Session } from '../db/models/session.js';
 
 export const findUserByEmail = email => User.findOne({ email });
 
+export const findUserById = id => User.findById(id);
+
 export const createUser = async user => {
   user.password = await bcrypt.hash(user.password, 10);
 
@@ -24,8 +26,10 @@ export const deleteSessionByUserId = userId => Session.findOneAndDelete({ userId
 
 export const deleteSessionById = id => Session.findByIdAndDelete(id);
 
-export const findSessionByIdAdnToken = ({ refreshToken, sessionId }) =>
+export const findSessionByIdAdnRefToken = ({ refreshToken, sessionId }) =>
   Session.findOne({
     _id: sessionId,
     refreshToken,
   });
+
+export const findSessionByAccessToken = accessToken => Session.findOne({ accessToken });

@@ -6,7 +6,7 @@ import {
   deleteSessionByUserId,
   deleteSessionById,
   findUserByEmail,
-  findSessionByIdAdnToken,
+  findSessionByIdAdnRefToken,
 } from '../services/auth.js';
 import setupCookies from '../utils/setupCookies.js';
 import clearCookies from '../utils/clearCookies.js';
@@ -64,16 +64,27 @@ export const logoutUserController = async (req, res, next) => {
 };
 
 export const refreshUserSessionController = async (req, res, next) => {
-  const refreshSession = await findSessionByIdAdnToken(req.cookies);
+  const refreshSession = await findSessionByIdAdnRefToken(req.cookies);
 
   if (refreshSession === null) {
     clearCookies(res);
-    throw createHttpError(401, 'Unauthorized');
+    throw createHttpError(401, 'Session not found');
   }
+
+  const { refreshTokenValidUntil, userId, _id } = refreshSession;
+
+  if (new Date() > new Date(refreshTokenValidUntil)) {
+    clearCookies(res);
+    throw createHttpError(401, 'Session token expired');
+  }
+
+  const [session] = await Promise.all([createSession(userId), deleteSessionById(_id)]);
+
+  setupCookies(res, session);
 
   res.status(200).json({
     status: 200,
     message: 'Successfully refreshed a session!',
-    data: 'accessToken',
+    data: { accessToken: session.accessToken },
   });
 };

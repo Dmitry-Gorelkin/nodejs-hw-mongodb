@@ -1,7 +1,7 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/contact.js';
 
-export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter }) => {
+export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter, userId }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
@@ -14,6 +14,8 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter 
   if (filter.isFavourite !== undefined) {
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
+
+  contactsQuery.where('userId').equals(userId);
 
   const [count, contacts] = await Promise.all([
     Contact.find().merge(contactsQuery).countDocuments(),
@@ -57,13 +59,11 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter 
   };
 };
 
-export const getContsctById = id => Contact.findById(id);
+export const getContsctByIdAndUserId = (_id, userId) => Contact.findOne({ _id, userId });
 
-export const createContact = payload => Contact.create(payload);
+export const createContact = contact => Contact.create(contact);
 
-export const updateContact = (id, update, options = { new: true }) =>
-  Contact.findByIdAndUpdate(id, update, options);
+export const updateContact = (_id, userId, update, options = { new: true }) =>
+  Contact.findOneAndUpdate({ _id, userId }, update, options);
 
-export const validateContact = payload => Contact.validate(payload);
-
-export const deleteContact = id => Contact.findByIdAndDelete(id);
+export const deleteContact = (_id, userId) => Contact.findOneAndDelete({ _id, userId });
