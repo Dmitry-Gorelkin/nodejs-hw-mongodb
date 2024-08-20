@@ -6,6 +6,7 @@ import routerAuth from './routers/auth.js';
 import routerContacts from './routers/contacts.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
+import cookieParser from 'cookie-parser';
 
 const PORT = env('PORT', 3000);
 const app = express();
@@ -17,7 +18,8 @@ const logger = pinoHttp({
 
 const setupServer = () => {
   app.use(cors());
-  app.use(logger);
+  // app.use(logger);
+  app.use(cookieParser());
 
   app.use('/auth', routerAuth);
 

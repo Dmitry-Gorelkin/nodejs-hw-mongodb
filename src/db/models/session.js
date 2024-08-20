@@ -24,6 +24,7 @@ const sessionSchema = new Schema(
     },
   },
   {
+    timestamps: true,
     versionKey: false,
   }
 );

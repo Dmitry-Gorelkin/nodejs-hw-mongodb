@@ -5,3 +5,8 @@ export const createUserShema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
+
+export const loginUserShema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+});
