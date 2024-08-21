@@ -18,7 +18,7 @@ const logger = pinoHttp({
 
 const setupServer = () => {
   app.use(cors());
-  // app.use(logger);
+  app.use(logger);
   app.use(cookieParser());
 
   app.use('/auth', routerAuth);
