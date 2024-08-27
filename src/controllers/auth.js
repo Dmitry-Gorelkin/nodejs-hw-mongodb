@@ -10,6 +10,9 @@ import {
 } from '../services/auth.js';
 import setupCookies from '../utils/setupCookies.js';
 import clearCookies from '../utils/clearCookies.js';
+import createJwtResetToken from '../utils/createJwtToken.js';
+import sendEmail from '../utils/sendEmail.js';
+import env from '../utils/env.js';
 
 export const registerUserController = async (req, res, next) => {
   const { email, name } = req.body;
@@ -86,5 +89,47 @@ export const refreshUserSessionController = async (req, res, next) => {
     status: 200,
     message: 'Successfully refreshed a session!',
     data: { accessToken: session.accessToken },
+  });
+};
+
+export const requestResetEmailController = async (req, res, next) => {
+  const { email } = req.body;
+
+  console.log({ email });
+
+  const user = await findUserByEmail(email);
+
+  console.log('user');
+
+  if (user === null) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const resetToken = createJwtResetToken({
+    id: user._id,
+    email,
+  });
+
+  console.log({ resetToken });
+
+  try {
+    await sendEmail({
+      from: env('SMTP_FROM'),
+      to: email,
+      subject: 'Reset your password',
+      html: `<p>Click <a href="${resetToken}">here</a> to reset your password!</p>`,
+    });
+  } catch (error) {
+    console.log(error);
+
+    throw createHttpError(555, error);
+  }
+
+  console.log('смотри почту');
+
+  res.status(200).json({
+    status: 200,
+    message: 'Reset password email has been successfully sent.',
+    data: {},
   });
 };
