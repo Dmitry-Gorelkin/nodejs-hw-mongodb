@@ -11,17 +11,6 @@ const transport = nodemailer.createTransport({
   },
 });
 
-const sendEmail = options => {
-  console.log({
-    host: env('SMTP_HOST'),
-    port: Number(env('SMTP_PORT')),
-    auth: {
-      user: env('SMTP_USER'),
-      pass: env('SMTP_PASSWORD'),
-    },
-  });
-
-  return transport.sendMail(options);
-};
+const sendEmail = options => transport.sendMail(options);
 
 export default sendEmail;

@@ -1,5 +1,4 @@
 import createHttpError from 'http-errors';
-import bcrypt from 'bcrypt';
 import {
   createSession,
   createUser,
@@ -7,12 +6,17 @@ import {
   deleteSessionById,
   findUserByEmail,
   findSessionByIdAdnRefToken,
+  findUserByIdAndEmail,
+  updateUserPassword,
 } from '../services/auth.js';
 import setupCookies from '../utils/setupCookies.js';
 import clearCookies from '../utils/clearCookies.js';
 import createJwtResetToken from '../utils/createJwtToken.js';
 import sendEmail from '../utils/sendEmail.js';
 import env from '../utils/env.js';
+import decodedJwtToken from '../utils/decodedJwtToken.js';
+import hashPassword from '../utils/hashPassword.js';
+import comparePassword from '../utils/comparePassword.js';
 
 export const registerUserController = async (req, res, next) => {
   const { email, name } = req.body;
@@ -39,7 +43,7 @@ export const loginUserController = async (req, res, next) => {
 
   if (user === null) throw createHttpError(401, 'Email is not registered');
 
-  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  const isPasswordCorrect = await comparePassword(password, user.password);
 
   if (!isPasswordCorrect) throw createHttpError(401, 'Password is incorrect');
 
@@ -95,11 +99,7 @@ export const refreshUserSessionController = async (req, res, next) => {
 export const requestResetEmailController = async (req, res, next) => {
   const { email } = req.body;
 
-  console.log({ email });
-
   const user = await findUserByEmail(email);
-
-  console.log('user');
 
   if (user === null) {
     throw createHttpError(404, 'User not found!');
@@ -110,26 +110,56 @@ export const requestResetEmailController = async (req, res, next) => {
     email,
   });
 
-  console.log({ resetToken });
-
   try {
     await sendEmail({
       from: env('SMTP_FROM'),
       to: email,
       subject: 'Reset your password',
-      html: `<p>Click <a href="${resetToken}">here</a> to reset your password!</p>`,
+      html: `<p>Click <a href="${env(
+        'APP_DOMAIN'
+      )}/reset-password?token=${resetToken}">here</a> to reset your password!</p>`,
     });
   } catch (error) {
     console.log(error);
-
-    throw createHttpError(555, error);
+    throw createHttpError(500, 'Failed to send the email, please try again later.');
   }
-
-  console.log('смотри почту');
 
   res.status(200).json({
     status: 200,
     message: 'Reset password email has been successfully sent.',
+    data: {},
+  });
+};
+
+export const resetPasswordController = async (req, res, next) => {
+  const { token, password } = req.body;
+  let id, email;
+
+  try {
+    ({ id, email } = decodedJwtToken(token));
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError')
+      throw createHttpError(401, 'Token is expired or invalid.');
+
+    throw error;
+  }
+
+  const user = await findUserByIdAndEmail({ _id: id, email });
+
+  if (user === null) throw createHttpError(404, 'User not found!');
+
+  const newHashPassword = await hashPassword(password);
+
+  await Promise.all([
+    updateUserPassword({ _id: id, password: newHashPassword }),
+    deleteSessionByUserId(id),
+  ]);
+
+  clearCookies(res);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Password has been successfully reset.',
     data: {},
   });
 };

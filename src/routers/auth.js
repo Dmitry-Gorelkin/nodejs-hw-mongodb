@@ -8,8 +8,9 @@ import {
   logoutUserController,
   refreshUserSessionController,
   requestResetEmailController,
+  resetPasswordController,
 } from '../controllers/auth.js';
-import { requestResetEmailShema } from '../validation/auth.js';
+import { requestResetEmailShema, resetPasswordSchema } from '../validation/auth.js';
 
 const router = Router();
 const jsonParser = express.json();
@@ -32,6 +33,13 @@ router.post(
   jsonParser,
   validateBody(requestResetEmailShema),
   ctrlWrapper(requestResetEmailController)
+);
+
+router.post(
+  '/reset-pwd',
+  jsonParser,
+  validateBody(resetPasswordSchema),
+  ctrlWrapper(resetPasswordController)
 );
 
 export default router;

@@ -1,17 +1,22 @@
-import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
+import hashPassword from '../utils/hashPassword.js';
 
 export const findUserByEmail = email => User.findOne({ email });
 
 export const findUserById = id => User.findById(id);
 
+export const findUserByIdAndEmail = ({ _id, email }) => User.findOne({ _id, email });
+
 export const createUser = async user => {
-  user.password = await bcrypt.hash(user.password, 10);
+  user.password = await hashPassword(user.password);
 
   await User.create(user);
 };
+
+export const updateUserPassword = ({ _id, password }) =>
+  User.findOneAndUpdate({ _id }, { password });
 
 export const createSession = userId =>
   Session.create({
