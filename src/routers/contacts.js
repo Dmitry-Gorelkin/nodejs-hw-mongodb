@@ -22,6 +22,7 @@ router.get('/', ctrlWrapper(getAllContactsController));
 
 router.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
 
+// добавить фото
 router.post(
   '/',
   jsonParser,
@@ -29,6 +30,7 @@ router.post(
   ctrlWrapper(createContactController)
 );
 
+// добюавить фото
 router.patch(
   '/:id',
   isValidId,
@@ -37,6 +39,7 @@ router.patch(
   ctrlWrapper(updateContactController)
 );
 
+// добавить фото
 router.put(
   '/:id',
   isValidId,
