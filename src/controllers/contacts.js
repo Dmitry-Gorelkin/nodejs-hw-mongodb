@@ -9,6 +9,7 @@ import {
 import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import parseFilterParams from '../utils/parseFilterParams.js';
+import saveFileToCloudinary from '../utils/saveFileToCloudinary.js';
 
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -41,10 +42,12 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  console.log(res.body);
-
   const userId = req.user._id;
-  const newContact = await createContact({ ...req.body, userId });
+  let photo = null;
+
+  if (req.file) photo = await saveFileToCloudinary(req.file);
+
+  const newContact = await createContact({ ...req.body, userId, photo });
 
   res.status(201).json({
     status: 201,
@@ -56,8 +59,14 @@ export const createContactController = async (req, res) => {
 export const updateContactController = async (req, res) => {
   const userId = req.user._id;
   const { id } = req.params;
+  let update = req.body;
 
-  const patchContact = await updateContact(id, userId, req.body);
+  if (req.file) {
+    const photo = await saveFileToCloudinary(req.file);
+    update = { ...update, photo };
+  }
+
+  const patchContact = await updateContact(id, userId, update);
 
   if (!patchContact) throw createHttpError(404, 'Contact not found');
 
@@ -71,6 +80,7 @@ export const updateContactController = async (req, res) => {
 export const putContactController = async (req, res, next) => {
   const userId = req.user._id;
   const { id } = req.params;
+  let photo = null;
   const options = {
     new: true,
     upsert: true,
@@ -78,7 +88,9 @@ export const putContactController = async (req, res, next) => {
     runValidators: true,
   };
 
-  const putContact = await updateContact(id, userId, { ...req.body, userId }, options);
+  if (req.file) photo = await saveFileToCloudinary(req.file);
+
+  const putContact = await updateContact(id, userId, { ...req.body, userId, photo }, options);
 
   if (putContact.lastErrorObject.updatedExisting) {
     res.status(200).json({
