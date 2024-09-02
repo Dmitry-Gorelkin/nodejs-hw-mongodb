@@ -1,11 +1,12 @@
 import { OAuth2Client } from 'google-auth-library';
 import createHttpError from 'http-errors';
 import env from './env.js';
+import { GOOGLE_AUTH_REDIRECT_URIS } from '../constants/contacts.js';
 
 const googleOAuthClient = new OAuth2Client({
   clientId: env('GOOGLE_AUTH_CLIENT_ID'),
   clientSecret: env('GOOGLE_AUTH_CLIENT_SECRET'),
-  redirectUri: env('GOOGLE_AUTH_REDIRECT_URIS'),
+  redirectUri: GOOGLE_AUTH_REDIRECT_URIS,
 });
 
 export const generateAuthUrl = () =>

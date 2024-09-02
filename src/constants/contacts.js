@@ -27,3 +27,5 @@ export const KEY_CONTACT_TYPE = Object.freeze(['personal', 'work', 'home']);
 export const KEY_CONTACT_TYPE_DEFAULT = KEY_CONTACT_TYPE[0];
 
 export const TEMP_UPLOAD_DIR = path.resolve('src/tmp');
+
+export const GOOGLE_AUTH_REDIRECT_URIS = 'http://localhost:8080/confirm-oauth';
