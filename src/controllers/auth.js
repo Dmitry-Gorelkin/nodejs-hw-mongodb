@@ -16,10 +16,12 @@ import sendEmail from '../utils/sendEmail.js';
 import env from '../utils/env.js';
 import decodedJwtToken from '../utils/decodedJwtToken.js';
 import hashPassword from '../utils/hashPassword.js';
+import hashRandomPassword from '../utils/hashRandomPassword.js';
 import comparePassword from '../utils/comparePassword.js';
+import { generateAuthUrl, validateCode } from '../utils/googleOAuth2.js';
 
 export const registerUserController = async (req, res, next) => {
-  const { email, name } = req.body;
+  const { email, name, password } = req.body;
 
   const emailIsAvailable = await findUserByEmail(email);
 
@@ -27,7 +29,15 @@ export const registerUserController = async (req, res, next) => {
     throw createHttpError(409, 'Email in use');
   }
 
-  await createUser(req.body);
+  const createHashPassword = await hashPassword(password);
+
+  const user = {
+    name,
+    email,
+    password: createHashPassword,
+  };
+
+  await createUser(user);
 
   res.status(201).json({
     status: 201,
@@ -161,5 +171,52 @@ export const resetPasswordController = async (req, res, next) => {
     status: 200,
     message: 'Password has been successfully reset.',
     data: {},
+  });
+};
+
+export const getGoogleOAuthUrlController = (req, res, next) => {
+  const url = generateAuthUrl();
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully get Google OAuth url!',
+    data: {
+      url,
+    },
+  });
+};
+
+export const loginWithGoogleController = async (req, res, next) => {
+  const { code } = req.body;
+  const ticket = await validateCode(code);
+  const payload = ticket.getPayload();
+
+  if (!payload) throw createHttpError(401, 'Unauthorized');
+
+  const { name, email } = payload;
+  let user = await findUserByEmail(email);
+
+  if (user === null) {
+    const password = await hashRandomPassword();
+    const newUser = {
+      name,
+      email,
+      password,
+    };
+
+    user = await createUser(newUser);
+  }
+
+  await deleteSessionByUserId(user._id);
+  const session = await createSession(user._id);
+
+  setupCookies(res, session);
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully logged in via Google OAuth!',
+    data: {
+      accessToken: session.accessToken,
+    },
   });
 };
