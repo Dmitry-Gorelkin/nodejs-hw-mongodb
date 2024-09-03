@@ -15,9 +15,9 @@ import createJwtResetToken from '../utils/createJwtToken.js';
 import sendEmail from '../utils/sendEmail.js';
 import env from '../utils/env.js';
 import decodedJwtToken from '../utils/decodedJwtToken.js';
-import hashPassword from '../utils/hashPassword.js';
-import hashRandomPassword from '../utils/hashRandomPassword.js';
-import comparePassword from '../utils/comparePassword.js';
+import bcryptHashPassword from '../utils/bcryptHashPassword.js';
+import bcryptHashRandomPassword from '../utils/bcryptHashRandomPassword.js';
+import bcryptComparePassword from '../utils/bcryptComparePassword.js';
 import { generateAuthUrl, validateCode } from '../utils/googleOAuth2.js';
 
 export const registerUserController = async (req, res, next) => {
@@ -29,7 +29,7 @@ export const registerUserController = async (req, res, next) => {
     throw createHttpError(409, 'Email in use');
   }
 
-  const createHashPassword = await hashPassword(password);
+  const createHashPassword = await bcryptHashPassword(password);
 
   const user = {
     name,
@@ -53,7 +53,7 @@ export const loginUserController = async (req, res, next) => {
 
   if (user === null) throw createHttpError(401, 'Email is not registered');
 
-  const isPasswordCorrect = await comparePassword(password, user.password);
+  const isPasswordCorrect = await bcryptComparePassword(password, user.password);
 
   if (!isPasswordCorrect) throw createHttpError(401, 'Password is incorrect');
 
@@ -158,7 +158,7 @@ export const resetPasswordController = async (req, res, next) => {
 
   if (user === null) throw createHttpError(404, 'User not found!');
 
-  const newHashPassword = await hashPassword(password);
+  const newHashPassword = await bcryptHashPassword(password);
 
   await Promise.all([
     updateUserPassword({ _id: id, password: newHashPassword }),
@@ -197,7 +197,7 @@ export const loginWithGoogleController = async (req, res, next) => {
   let user = await findUserByEmail(email);
 
   if (user === null) {
-    const password = await hashRandomPassword();
+    const password = await bcryptHashRandomPassword();
     const newUser = {
       name,
       email,
