@@ -16,6 +16,7 @@ export const KEY_OF_CONTACT = Object.freeze([
   'email',
   'contactType',
   'isFavourite',
+  'photo',
   'createdAt',
   'updatedAt',
 ]);

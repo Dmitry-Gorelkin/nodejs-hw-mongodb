@@ -1,18 +1,31 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: <назва вашого додатку>
+  title: Contacts APP
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: <опис вашого додатку>
+  description:
+    'This API application provides the ability to manage contacts. Users can register, log in, and
+    access the contact database. Access to the API is protected via JWT authorization. Only
+    authorized users can add, edit, or delete contacts, as well as view existing records. The main
+    features of the API include: User registration and authentication; Contact management (creation,
+    viewing, editing, deletion); Data protection via JWT tokens.'
 tags:
-  # теги, що ви будете використовувати
+  - name: Contacts
+    description: Operations about contacts.
+  - name: Auth
+    description: Auth operations.
 servers:
-  - url: http://localhost:3000
-  - url: #посилання на задеплоєний сайт
+  - url: http://localhost:8080
+  # - url: #посилання на задеплоєний сайт
 paths:
-  # тут будуть посилання на ендпоінти
+  /contacts:
+    post:
+      $ref: ../swagger/paths/students/post.yaml
+  /contacts/{id}:
+    get:
+      $ref: ../swagger/paths/students/{id}/get.yaml
 components:
   securitySchemes:
     bearerAuth:

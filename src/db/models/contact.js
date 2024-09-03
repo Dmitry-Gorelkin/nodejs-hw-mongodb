@@ -25,7 +25,10 @@ const contactsSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    photo: { type: String },
+    photo: {
+      type: String,
+      default: null,
+    },
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
