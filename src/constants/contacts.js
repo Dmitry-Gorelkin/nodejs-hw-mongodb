@@ -22,9 +22,9 @@ export const KEY_OF_CONTACT = Object.freeze([
 
 export const KEY_OF_CONTACT_DEFAULT = KEY_OF_CONTACT[0];
 
-export const KEY_CONTACT_TYPE = Object.freeze(['personal', 'work', 'home']);
+export const KEY_CONTACT_TYPE = Object.freeze({ personal: 'personal', work: 'work', home: 'home' });
 
-export const KEY_CONTACT_TYPE_DEFAULT = KEY_CONTACT_TYPE[0];
+export const KEY_CONTACT_TYPE_DEFAULT = KEY_CONTACT_TYPE.personal;
 
 export const TEMP_UPLOAD_DIR = path.resolve('src/tmp');
 

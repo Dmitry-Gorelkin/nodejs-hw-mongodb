@@ -6,7 +6,7 @@ export const createContactShema = Joi.object({
   phoneNumber: Joi.string().min(3).max(20).required(),
   email: Joi.string().email(),
   contactType: Joi.string()
-    .valid(...KEY_CONTACT_TYPE)
+    .valid(...[KEY_CONTACT_TYPE.home, KEY_CONTACT_TYPE.personal, KEY_CONTACT_TYPE.work])
     .required(),
   isFavourite: Joi.boolean(),
 });
@@ -15,6 +15,8 @@ export const updateContactShema = Joi.object({
   name: Joi.string().min(3).max(20),
   phoneNumber: Joi.string().min(3).max(20),
   email: Joi.string().email(),
-  contactType: Joi.string().valid(...KEY_CONTACT_TYPE),
+  contactType: Joi.string().valid(
+    ...[KEY_CONTACT_TYPE.home, KEY_CONTACT_TYPE.personal, KEY_CONTACT_TYPE.work]
+  ),
   isFavourite: Joi.boolean(),
 });

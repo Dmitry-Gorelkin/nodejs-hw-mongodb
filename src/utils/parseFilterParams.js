@@ -5,7 +5,12 @@ const parseType = type => {
 
   const typeLowerCase = type.toLocaleLowerCase();
 
-  if (KEY_CONTACT_TYPE.includes(typeLowerCase)) return typeLowerCase;
+  if (
+    [KEY_CONTACT_TYPE.home, KEY_CONTACT_TYPE.personal, KEY_CONTACT_TYPE.work].includes(
+      typeLowerCase
+    )
+  )
+    return typeLowerCase;
 };
 
 const parseIsFavourite = isFavourite => {

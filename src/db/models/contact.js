@@ -18,7 +18,7 @@ const contactsSchema = new Schema(
     contactType: {
       type: String,
       required: true,
-      enum: KEY_CONTACT_TYPE,
+      enum: [KEY_CONTACT_TYPE.home, KEY_CONTACT_TYPE.personal, KEY_CONTACT_TYPE.work],
       default: KEY_CONTACT_TYPE_DEFAULT,
     },
     isFavourite: {
