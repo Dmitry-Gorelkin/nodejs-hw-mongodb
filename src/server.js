@@ -7,6 +7,7 @@ import routerContacts from './routers/contacts.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
+import swaggerDocs from './middlewares/swaggerDocs.js';
 
 const PORT = env('PORT', 3000);
 const app = express();
@@ -20,6 +21,8 @@ const setupServer = () => {
   app.use(cors());
   app.use(logger);
   app.use(cookieParser());
+
+  app.use('/api-docs', swaggerDocs());
 
   app.use('/auth', routerAuth);
 
