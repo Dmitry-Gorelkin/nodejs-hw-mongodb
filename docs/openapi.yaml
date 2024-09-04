@@ -18,7 +18,7 @@ tags:
     description: Auth operations.
 servers:
   - url: http://localhost:8080
-  # - url: #посилання на задеплоєний сайт
+  - url: https://hw7-swagger-0hoo.onrender.com
 paths:
   /contacts:
     get:
