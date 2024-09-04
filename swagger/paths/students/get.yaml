@@ -1,0 +1,127 @@
+tags:
+  - Contacts
+summary: Get All Contacts
+operationId: getAllContacts
+description: 'Fetch all contacts with optional filters and sorting options'
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    schema:
+      type: integer
+      example: 1
+      default: 1
+      description: 'Specify the page number to display, default is 1'
+  - in: query
+    name: perPage
+    schema:
+      type: integer
+      example: 10
+      default: 10
+      description: 'Number of contacts per page, default is 10'
+  - in: query
+    name: sortBy
+    schema:
+      type: string
+      example: _id
+      default: _id
+      description: 'Field to sort contacts by, default is _id'
+  - in: query
+    name: sortOrder
+    schema:
+      type: string
+      enum: ['asc', 'desc']
+      example: 'asc'
+      default: asc
+      description: 'Sort order, either ascending ("asc") or descending ("desc"), default is "asc"'
+  - in: query
+    name: type
+    schema:
+      type: string
+      enum: ['personal', 'work', 'home']
+      example: 'home'
+      description: "Filter contacts by type: 'personal', 'work', or 'home'"
+  - in: query
+    name: isFavourite
+    schema:
+      type: boolean
+      example: false
+      description: 'Filter to show only favorite contacts'
+responses:
+  '200':
+    description: Successfully found contacts!
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found contacts!
+            data:
+              type: object
+              required:
+                - data
+                - page
+                - perPage
+                - totalItems
+                - totalPages
+                - hasPreviousPage
+                - hasNextPage
+                - sortBy
+                - sortOrder
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../../components/schemas/contact.yaml
+                page:
+                  type: integer
+                  example: 1
+                perPage:
+                  type: integer
+                  example: 10
+                totalItems:
+                  type: integer
+                  example: 5
+                totalPages:
+                  type: integer
+                  example: 1
+                hasNextPage:
+                  type: boolean
+                  example: false
+                hasPreviousPage:
+                  type: boolean
+                  example: true
+                sortBy:
+                  type: string
+                  example: '_id'
+                sortOrder:
+                  type: string
+                  example: 'asc'
+  '400':
+    description: 'The requested page exceeds the total number of pages'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: 'The requested page exceeds the total number of pages'
+  '401':
+    $ref: '../../components/responses/401.yaml'

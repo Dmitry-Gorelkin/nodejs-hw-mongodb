@@ -21,8 +21,6 @@ router.use(authenticate);
 
 router.get('/', ctrlWrapper(getAllContactsController));
 
-router.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
-
 router.post(
   '/',
   jsonParser,
@@ -30,6 +28,8 @@ router.post(
   validateBody(createContactShema),
   ctrlWrapper(createContactController)
 );
+
+router.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
 
 router.patch(
   '/:id',

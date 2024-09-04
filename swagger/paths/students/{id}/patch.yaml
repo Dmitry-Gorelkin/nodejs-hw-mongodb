@@ -1,0 +1,74 @@
+tags:
+  - Contacts
+summary: Update a contact by ID
+operationId: patchContacts
+description: 'Update a contact by its ID'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: 66d7503af64e3c25c739120f
+      description: 'Unique identifier of the contact to update'
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            description: "The contact's name"
+            type: string
+            example: 'John Wick'
+          phoneNumber:
+            description: "The contact's phone number"
+            type: string
+            example: '+380000000001'
+          email:
+            description: "The contact's email address"
+            type: string
+            example: 'BabaYaga@gmail.com'
+          contactType:
+            description: 'The type of the contact'
+            type: string
+            enum: ['personal', 'work', 'home']
+            example: 'work'
+          isFavourite:
+            description: 'Whether the contact is marked as a favorite'
+            type: boolean
+            example: true
+          photo:
+            description: "The contact's photo"
+            type: string
+            format: binary
+responses:
+  '200':
+    description: 'Contact updated successfully'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully patched a contact!'
+            data:
+              type: object
+              $ref: ../../../components/schemas/contact.yaml
+  '400':
+    $ref: ../../../components/responses/idNotValid-400.yaml
+  '401':
+    $ref: ../../../components/responses/401.yaml
+  '404':
+    $ref: ../../../components/responses/contactNotFound-404.yaml
