@@ -1244,6 +1244,14 @@
       }
     },
     "schemas": {
+      "Contact": {
+        "type": "object",
+        "$ref": "#/components/schemas/contact"
+      },
+      "User": {
+        "type": "object",
+        "$ref": "#/components/schemas/user"
+      },
       "contact": {
         "type": "object",
         "required": [
@@ -1258,7 +1266,7 @@
         ],
         "properties": {
           "_id": {
-            "description": "Contact's id",
+            "description": "Backend-generated unique identifier.",
             "type": "string",
             "example": "66d7503af64e3c25c739120f"
           },
@@ -1305,6 +1313,37 @@
             "description": "Contact's belongs to a specific user",
             "type": "string",
             "example": "66ce19c3ee318583e0455741"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "_id": {
+            "description": "Backend-generated unique identifier.",
+            "type": "string",
+            "example": "66d7503af64e3c25c739120f"
+          },
+          "name": {
+            "description": "User name",
+            "type": "string",
+            "example": "Admin"
+          },
+          "email": {
+            "description": "Email user",
+            "type": "string",
+            "example": "admin@gmail.com"
+          },
+          "password": {
+            "description": "Password user",
+            "type": "string",
+            "example": "password123"
           }
         }
       }

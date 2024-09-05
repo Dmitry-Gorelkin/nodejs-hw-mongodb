@@ -10,7 +10,7 @@ required:
   - userId
 properties:
   _id:
-    description: "Contact's id"
+    description: 'Backend-generated unique identifier.'
     type: string
     example: 66d7503af64e3c25c739120f
   name:
