@@ -1,0 +1,74 @@
+tags:
+  - Auth
+summary: Register a new user
+operationId: registerUser
+description: 'Register a new user by providing required credentials.'
+security: []
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            description: 'Full name of the user.'
+            type: string
+            example: 'Admin'
+          email:
+            description: 'Email address of the user.'
+            type: string
+            example: 'admin@gmail.com'
+          password:
+            description: 'User password.'
+            type: string
+            example: 'password123'
+responses:
+  '201':
+    description: 'User registered successfully.'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'User registered successfully!'
+            data:
+              type: object
+              required:
+                - name
+                - email
+              properties:
+                name:
+                  type: string
+                  example: 'Admin'
+                email:
+                  type: string
+                  example: 'admin@gmail.com'
+  '409':
+    description: 'Email address is already in use.'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 409
+            message:
+              type: string
+              example: 'Email address is already in use.'

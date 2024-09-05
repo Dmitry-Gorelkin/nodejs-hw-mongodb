@@ -17,8 +17,8 @@ responses:
   '204':
     description: 'Contact successfully deleted, no content returned'
   '400':
-    $ref: ../../../components/responses/idNotValid-400.yaml
+    $ref: ../../../components/responses/400-idNotValid.yaml
   '401':
     $ref: '../../../components/responses/401.yaml'
   '404':
-    $ref: ../../../components/responses/contactNotFound-404.yaml
+    $ref: ../../../components/responses/404-contactNotFound.yaml

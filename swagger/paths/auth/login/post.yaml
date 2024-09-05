@@ -1,0 +1,52 @@
+tags:
+  - Auth
+summary: Log in a user
+operationId: loginUser
+description: 'Authenticate a user with email and password.'
+security: []
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            description: 'Email address of the user.'
+            type: string
+            example: 'admin@gmail.com'
+          password:
+            description: 'Password of the user.'
+            type: string
+            example: 'password123'
+responses:
+  '200':
+    description: 'User successfully logged in.'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Successfully logged in an user!'
+            data:
+              type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  description: 'JWT access token for authenticated user.'
+                  example: 'RGAd3mpnOjROnYX7ZZty5PayQQS7Esnqu8UcmRgY'
+  '401':
+    $ref: ../../../components/responses/401.yaml

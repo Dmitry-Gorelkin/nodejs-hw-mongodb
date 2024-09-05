@@ -384,13 +384,13 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/idNotValid-400"
+            "$ref": "#/components/responses/400-idNotValid"
           },
           "401": {
             "$ref": "#/components/responses/401"
           },
           "404": {
-            "$ref": "#/components/responses/contactNotFound-404"
+            "$ref": "#/components/responses/404-contactNotFound"
           }
         }
       },
@@ -496,13 +496,159 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/idNotValid-400"
+            "$ref": "#/components/responses/400-idNotValid"
           },
           "401": {
             "$ref": "#/components/responses/401"
           },
           "404": {
-            "$ref": "#/components/responses/contactNotFound-404"
+            "$ref": "#/components/responses/404-contactNotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create or update contact by ID",
+        "operationId": "createUpdateContacts",
+        "description": "Create a new contact or update an existing contact by its unique ID.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "66d7503af64e3c25c739120f",
+              "description": "Unique identifier of the contact to be created or updated."
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber",
+                  "contactType",
+                  "userId"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "The full name of the contact.",
+                    "type": "string",
+                    "example": "John Wick"
+                  },
+                  "phoneNumber": {
+                    "description": "The contact's phone number.",
+                    "type": "string",
+                    "example": "+380000000001"
+                  },
+                  "email": {
+                    "description": "The contact's email address (optional).",
+                    "type": "string",
+                    "example": "BabaYaga@gmail.com",
+                    "default": null
+                  },
+                  "contactType": {
+                    "description": "Category of the contact (personal, work, or home).",
+                    "type": "string",
+                    "enum": [
+                      "personal",
+                      "work",
+                      "home"
+                    ],
+                    "example": "work",
+                    "default": "personal"
+                  },
+                  "isFavourite": {
+                    "description": "Indicates whether the contact is marked as a favorite.",
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "photo": {
+                    "description": "Optional photo of the contact.",
+                    "type": "string",
+                    "format": "binary",
+                    "default": null
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact was successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully updated the contact!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Contact was successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created the contact!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/contact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400-idNotValid"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       },
@@ -535,13 +681,556 @@
             "description": "Contact successfully deleted, no content returned"
           },
           "400": {
-            "$ref": "#/components/responses/idNotValid-400"
+            "$ref": "#/components/responses/400-idNotValid"
           },
           "401": {
             "$ref": "#/components/responses/401"
           },
           "404": {
-            "$ref": "#/components/responses/contactNotFound-404"
+            "$ref": "#/components/responses/404-contactNotFound"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register a new user",
+        "operationId": "registerUser",
+        "description": "Register a new user by providing required credentials.",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "Full name of the user.",
+                    "type": "string",
+                    "example": "Admin"
+                  },
+                  "email": {
+                    "description": "Email address of the user.",
+                    "type": "string",
+                    "example": "admin@gmail.com"
+                  },
+                  "password": {
+                    "description": "User password.",
+                    "type": "string",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User registered successfully!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "email"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "Admin"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "admin@gmail.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email address is already in use.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 409
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Email address is already in use."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log in a user",
+        "operationId": "loginUser",
+        "description": "Authenticate a user with email and password.",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "Email address of the user.",
+                    "type": "string",
+                    "example": "admin@gmail.com"
+                  },
+                  "password": {
+                    "description": "Password of the user.",
+                    "type": "string",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully logged in.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged in an user!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token for authenticated user.",
+                          "example": "RGAd3mpnOjROnYX7ZZty5PayQQS7Esnqu8UcmRgY"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Log out a user",
+        "operationId": "logoutUser",
+        "description": "Log out the currently authenticated user.",
+        "security": [],
+        "responses": {
+          "204": {
+            "description": "User successfully logged out."
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh user session",
+        "operationId": "refreshSession",
+        "description": "Refresh the current user session and issue a new access token.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Session successfully refreshed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully refreshed a session!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "description": "New JWT access token for the user.",
+                          "example": "RGAd3mpnOjROnYX7ZZty5PayQQS7Esnqu8UcmRgY"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/auth/send-reset-email": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Send password reset email",
+        "operationId": "sendResetEmail",
+        "description": "Send a password reset email to the specified user.",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "Email address of the user requesting the password reset.",
+                    "type": "string",
+                    "example": "admin@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset email has been successfully sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Reset password email has been successfully sent."
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {},
+                      "description": "Empty object to confirm the operation."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404-userNotFound"
+          }
+        }
+      }
+    },
+    "/auth/reset-pwd": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset password",
+        "operationId": "resetPassword",
+        "description": "Reset the user password using a provided JWT token and new password.",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "password",
+                  "token"
+                ],
+                "properties": {
+                  "password": {
+                    "description": "New password for the user.",
+                    "type": "string",
+                    "example": "123password"
+                  },
+                  "token": {
+                    "description": "JWT token used for password reset.",
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Y2UxOWMzZWUzMTg1ODNlMDQ1NTc0MSIsImVtYWlsIjoiZ29yZWxraW4uZWxlY3Ryb0BnbWFpbC5jb20iLCJpYXQiOjE3MjU1NzQwMzIsImV4cCI6MTcyNTU3NDMzMn0.KqPSB0Z0zvODGLOrQXNaPE14j97vysR9KsNdYAjveB0"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password has been successfully reset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password has been successfully reset."
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Empty object to confirm the operation.",
+                      "example": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token is expired or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token is expired or invalid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404-userNotFound"
+          }
+        }
+      }
+    },
+    "/auth/get-oauth-url": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Get Google OAuth URL",
+        "operationId": "getGoogleOAuthUrl",
+        "description": "Retrieve the URL for Google OAuth authentication.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Google OAuth URL.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully retrieved Google OAuth URL."
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "URL for Google OAuth authentication.",
+                          "example": "https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=751709214440-2716km6vgheilnjrqslcjmnkpblvv646.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fconfirm-oauth"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/confirm-oauth": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Confirm Google OAuth login",
+        "operationId": "confirmOAuth",
+        "description": "Confirm Google OAuth login by exchanging the authorization code for an access token.",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "description": "Authorization code received from Google.",
+                    "type": "string",
+                    "example": "4/0AQlEd8ynAJaDWH6ip1K7_5eNGEyi4-jj1NUG0DVlJ6vm18MT1c_tw90olTo8FOrbrrWGFQ"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved access token for Google OAuth login.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully retrieved access token for Google OAuth login."
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token for authenticated user.",
+                          "example": "RGAd3mpnOjROnYX7ZZty5PayQQS7Esnqu8UcmRgY"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       }
@@ -645,7 +1334,7 @@
           }
         }
       },
-      "idNotValid-400": {
+      "400-idNotValid": {
         "description": "Invalid ID",
         "content": {
           "application/json": {
@@ -669,7 +1358,7 @@
           }
         }
       },
-      "contactNotFound-404": {
+      "404-contactNotFound": {
         "description": "Contact not found",
         "content": {
           "application/json": {
@@ -687,6 +1376,30 @@
                 "message": {
                   "type": "string",
                   "example": "Contact not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404-userNotFound": {
+        "description": "User not found!",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "User not found!"
                 }
               }
             }

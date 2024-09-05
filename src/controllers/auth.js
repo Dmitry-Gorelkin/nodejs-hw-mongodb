@@ -179,7 +179,7 @@ export const getGoogleOAuthUrlController = (req, res, next) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully get Google OAuth url!',
+    message: 'Successfully retrieved Google OAuth URL',
     data: {
       url,
     },
@@ -214,7 +214,7 @@ export const loginWithGoogleController = async (req, res, next) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully logged in via Google OAuth!',
+    message: 'Successfully retrieved access token for Google OAuth login.',
     data: {
       accessToken: session.accessToken,
     },
