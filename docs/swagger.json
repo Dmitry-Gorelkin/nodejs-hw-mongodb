@@ -239,8 +239,7 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "contactType",
-                  "userId"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
@@ -281,11 +280,6 @@
                     "type": "string",
                     "format": "binary",
                     "default": null
-                  },
-                  "userId": {
-                    "description": "Contact's belongs to a specific user",
-                    "type": "string",
-                    "example": "66ce19c3ee318583e0455741"
                   }
                 }
               }
@@ -538,8 +532,7 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "contactType",
-                  "userId"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
